@@ -22,8 +22,8 @@ public class TowerFace
 
     public void ConstructMesh()
     {
-        Vector3[] vertices = new Vector3[resolution * resolution];
-        int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
+        Vector3[] vertices = new Vector3[(int) (resolution * resolution * 2)];
+        int[] triangles = new int[(resolution - 1) * ((resolution * 2) - 1) * 6];
         int triIndex = 0;
 
         for (int y = 0; y < resolution; y++)
