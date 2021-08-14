@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Tower towerPrefab;
+    private Tower tower;
+
     void Start()
     {
-        
+        BuildTower();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space)) {
+			RebuildTower();
+		}
+    }
+
+    private void BuildTower()
+    {
+        tower = Instantiate(towerPrefab) as Tower;
+    }
+
+    private void RebuildTower()
+    {
+        tower.DestroyFloors();
+        Destroy(tower.gameObject);
+        BuildTower();
     }
 }

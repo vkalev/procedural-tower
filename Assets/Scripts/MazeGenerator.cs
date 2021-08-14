@@ -3,124 +3,96 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
+    public int SizeX = 40, SizeZ = 20;
+    MazeCell[,] maze;
+    Stack<MazeCell> frontier;
+    List<MazeCell> visited;
+    public Tile tilePrefab;
 
-    public class Pair
+    void Start()
     {
-        public int y { get; set; }
-        public int x { get; set; }
-
-        public Pair(int y, int x)
-        {
-            this.y = y;
-            this.x = x;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Pair);
-        }
-
-        public bool Equals(Pair other)
-        {
-            return other != null &&
-                this.y == other.y &&
-                this.x == other.x;
-        }
-        
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-    }
-
-
-    public bool showDebug;
-    public int rows = 20;
-    public int cols = 40;
-    [SerializeField] private Material mazeMat1;
-    [SerializeField] private Material mazeMat2;
-    [SerializeField] private Material startMat;
-
-    int[,] data;
-    Stack<Pair> frontier;
-    List<Pair> visited;
-
-    void Awake()
-    {
-        data = new int[rows, cols];
-        frontier = new Stack<Pair>();
-        visited = new List<Pair>();
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                data[y, x] = 1;
+        maze = new MazeCell[SizeX, SizeZ];
+        frontier = new Stack<MazeCell>();
+        visited = new List<MazeCell>();
+        for (int x = 0; x < SizeX; x++) {
+            for (int z = 0; z < SizeZ; z++) {
+                CreateCell(x, z);
             }
         }
     }
     
+    private void CreateCell(int x, int z)
+    {
+        Tile newTile = Instantiate(tilePrefab) as Tile;
+        maze[x, z] = new MazeCell(x, z, newTile);
+        newTile.name = "Floor Tile " + x + ", " + z;
+		newTile.transform.parent = transform;
+		newTile.transform.localPosition = new Vector3(x - SizeX * 0.5f + 0.5f, 0f, z - SizeZ * 0.5f + 0.5f);
+    }
+
     public void GenerateMaze()
     {
-        RandomizedDFS();
+        // RandomizedDFS();
     }
 
-    void RandomizedDFS() 
-    {
-        int randomX = Random.Range(0, cols);
-        int randomY = Random.Range(0, rows);
-        Pair initial = new Pair(randomY, randomX);
-        data[randomY, randomX] = 0;
-        frontier.Push(initial);
-        visited.Add(initial);
+    // void RandomizedDFS() 
+    // {
+    //     int randomX = Random.Range(0, SizeX);
+    //     int randomZ = Random.Range(0, SizeZ);
+    //     MazeCell initial = maze[randomX, randomZ];
+    //     frontier.Push(initial);
+    //     visited.Add(initial);
 
-        while (frontier.Count > 0) {
-            Pair cell = frontier.Pop();
-            List<Pair> neighbors = GetNeighbors(cell.y, cell.x);
-            if (neighbors.Count > 0) {
-                int position = Random.Range(0, neighbors.Count);
-                for (int i = 0; i < neighbors.Count; i++) {
-                    Pair currNeighbor = neighbors[i];
-                    visited.Add(currNeighbor);
-                    if (i != position) frontier.Push(currNeighbor);
-                }
-                frontier.Push(neighbors[position]);
-                CreatePassages(neighbors);
-            }
-        }
-    }
+    //     while (frontier.Count > 0) {
+    //         MazeCell MazeCell = frontier.Pop();
+    //         List<MazeCell> neighbors = GetNeighbors(MazeCell.X, MazeCell.Z);
+    //         if (neighbors.Count > 0) {
+    //             int position = Random.Range(0, neighbors.Count);
+    //             for (int i = 0; i < neighbors.Count; i++) {
+    //                 MazeCell currNeighbor = neighbors[i];
+    //                 visited.Add(currNeighbor);
+    //                 if (i != position) frontier.Push(currNeighbor);
+    //             }
+    //             frontier.Push(neighbors[position]);
+    //             CreatePassages(neighbors);
+    //         }
+    //     }
+    // }
 
-    void CreatePassages(List<Pair> neighbors)
-    {
-        foreach (Pair neighbor in neighbors)
-        {
-            Pair leftCell = new Pair(neighbor.y, neighbor.x-1);
-            Pair rightCell = new Pair(neighbor.y, neighbor.x+1);
-            bool leftIsWall = leftCell.x >= 0 && data[leftCell.y, leftCell.x] == 1;
-            bool rightIsWall = rightCell.x < cols && data[rightCell.y, rightCell.x] == 1;
-            if (leftIsWall && rightIsWall) data[neighbor.y, neighbor.x] = 0;
-        }
-    }
+    // void CreatePassages(List<MazeCell> neighbors)
+    // {
+    //     foreach (MazeCell neighbor in neighbors)
+    //     {
+    //         MazeCell leftMazeCell = new MazeCell(neighbor.y, neighbor.x-1);
+    //         MazeCell rightMazeCell = new MazeCell(neighbor.y, neighbor.x+1);
+    //         bool leftIsWall = leftMazeCell.x >= 0 && maze[leftMazeCell.y, leftMazeCell.x] == 1;
+    //         bool rightIsWall = rightMazeCell.x < SizeZ && maze[rightMazeCell.y, rightMazeCell.x] == 1;
+    //         if (leftIsWall && rightIsWall) maze[neighbor.y, neighbor.x] = 0;
+    //     }
+    // }
 
-    List<Pair> GetNeighbors(int y, int x)
-    {
-        List<Pair> validNeighbors = new List<Pair>();
-        Pair leftNeighbor = new Pair(y, x-1);
-        if (leftNeighbor.x >= 0 && !visited.Contains(leftNeighbor)) validNeighbors.Add(leftNeighbor);
-        Pair rightNeighbor = new Pair(y, x+1);
-        if (rightNeighbor.x < cols && !visited.Contains(rightNeighbor)) validNeighbors.Add(rightNeighbor);
-        Pair downNeighbor = new Pair(y-1, x);
-        if (downNeighbor.y >= 0 && !visited.Contains(downNeighbor)) validNeighbors.Add(downNeighbor);
-        Pair upNeighbor = new Pair(y+1, x);
-        if (upNeighbor.y < rows && !visited.Contains(upNeighbor)) validNeighbors.Add(upNeighbor);
-        return validNeighbors;
-        // return new List<Pair> { new Pair(y, x-1), new Pair(y, x+1), new Pair(y-1, x), new Pair(y+1, x) };
-    }
+    // List<MazeCell> GetNeighbors(int x, int z)
+    // {
+    //     List<MazeCell> validNeighbors = new List<MazeCell>();
+    //     MazeCell leftNeighbor = maze[x, z-1];
+    //     if (leftNeighbor.Z >= 0 && !visited.Contains(leftNeighbor)) validNeighbors.Add(leftNeighbor);
+    //     MazeCell rightNeighbor = new MazeCell(y, x+1);
+    //     if (rightNeighbor.x < SizeZ && !visited.Contains(rightNeighbor)) validNeighbors.Add(rightNeighbor);
+    //     MazeCell downNeighbor = new MazeCell(y-1, x);
+    //     if (downNeighbor.y >= 0 && !visited.Contains(downNeighbor)) validNeighbors.Add(downNeighbor);
+    //     MazeCell upNeighbor = new MazeCell(y+1, x);
+    //     if (upNeighbor.y < SizeX && !visited.Contains(upNeighbor)) validNeighbors.Add(upNeighbor);
+    //     return validNeighbors;
+    //     // return new List<MazeCell> { new MazeCell(y, x-1), new MazeCell(y, x+1), new MazeCell(y-1, x), new MazeCell(y+1, x) };
+    // }
 
 
 // void PrintFrontier()
     // {
-    //     foreach (int[] cell in frontier)
+    //     foreach (int[] MazeCell in frontier)
     //     {
-    //         Debug.Log(cell[0]);
-    //         Debug.Log(cell[1]);
+    //         Debug.Log(MazeCell[0]);
+    //         Debug.Log(MazeCell[1]);
     //     }
     // }
 
@@ -130,12 +102,12 @@ public class MazeGenerator : MonoBehaviour
     //     return randomNeighbor;
     // }
 
-    // void VisitCell(int y, int x) {
+    // void VisitMazeCell(int y, int x) {
     //     visited.Add(new int[2] {y, x});
     //     int[,] neighbors = GetNeighbors(y, x);
     //     for (int i = 0; i < neighbors.GetLength(0); i++) {
     //         int[] currNeighbor = new int[2] { neighbors[i, 0], neighbors[i, 1] };
-    //         bool inBounds = currNeighbor[1] >= 0 && currNeighbor[1] < cols && currNeighbor[0] >= 0 && currNeighbor[0] < rows;
+    //         bool inBounds = currNeighbor[1] >= 0 && currNeighbor[1] < SizeZ && currNeighbor[0] >= 0 && currNeighbor[0] < SizeX;
     //         if (inBounds && isValidNeighbor(currNeighbor[0], currNeighbor[1])) {
     //             frontier.Add(currNeighbor);
     //         }
@@ -149,22 +121,22 @@ public class MazeGenerator : MonoBehaviour
     //     return !isVisited && !inFrontier;
     // }
 
-    // object[] CheckCell(int y, int x) {
-    //     int[] newCell = new int[2] { y+1, x };
+    // object[] CheckMazeCell(int y, int x) {
+    //     int[] newMazeCell = new int[2] { y+1, x };
     //     if (x % 2 == 1) {
-    //         newCell = new int[] { y, x+1 };
+    //         newMazeCell = new int[] { y, x+1 };
     //     }
 
-    //     bool shouldOpen = isValidNeighbor(newCell[0], newCell[1]);
+    //     bool shouldOpen = isValidNeighbor(newMazeCell[0], newMazeCell[1]);
     //     if (!shouldOpen) {
-    //         newCell = new int[2] { y-1, x };
+    //         newMazeCell = new int[2] { y-1, x };
     //         if (x % 2 == 1) {
-    //             newCell = new int[] { y, x-1 };
+    //             newMazeCell = new int[] { y, x-1 };
     //         }
-    //         shouldOpen = isValidNeighbor(newCell[0], newCell[1]);
+    //         shouldOpen = isValidNeighbor(newMazeCell[0], newMazeCell[1]);
     //     }
 
-    //     return new object[] { shouldOpen, newCell };
+    //     return new object[] { shouldOpen, newMazeCell };
     // }
 
     // int[,] Shuffle (int[,] neighbors)
@@ -181,23 +153,23 @@ public class MazeGenerator : MonoBehaviour
     //     return neighbors;
     // }
 
-    void OnGUI()
-    {
-        if (!showDebug) return;
+    // void OnGUI()
+    // {
+    //     if (!showDebug) return;
 
-        int[,] maze = data;
-        string label = "";
+    //     int[,] maze = maze;
+    //     string label = "";
 
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                label += maze[i, j].ToString();
-            }
-            label += "\n";
-        }
+    //     for (int i = 0; i < SizeX; i++)
+    //     {
+    //         for (int j = 0; j < SizeZ; j++)
+    //         {
+    //             label += maze[i, j].ToString();
+    //         }
+    //         label += "\n";
+    //     }
 
-        //4
-        GUI.Label(new Rect(20, 20, 500, 500), label);
-    }
+    //     //4
+    //     GUI.Label(new Rect(20, 20, 500, 500), label);
+    // }
 }

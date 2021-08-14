@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MazeGenerator))]
 public class Floor : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private MazeGenerator generator;
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        generator = GetComponent<MazeGenerator>();
+        generator.GenerateMaze();
     }
 }
