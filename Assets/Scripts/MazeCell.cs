@@ -3,20 +3,13 @@ public class MazeCell
     public Tile Tile { get; set; } 
     public int X { get; set; }
     public int Z { get; set; }
-    public bool LeftWall { get; set; } 
-    public bool RightWall { get; set; }
-    public bool BottomWall { get; set; }
-    public bool TopWall { get; set; }
+    private Edge[] edges = new Edge[MazeDirections.Count];
 
     public MazeCell(int x, int z, Tile tile)
     {
         this.Tile = tile;
         this.X = x;
         this.Z = z;
-        this.LeftWall = true;
-        this.RightWall = true;
-        this.BottomWall = true;
-        this.TopWall = true;
     }
 
     public override bool Equals(object obj)
@@ -35,4 +28,12 @@ public class MazeCell
     {
         return base.GetHashCode();
     }
+
+    public Edge GetEdge (MazeDirection direction) {
+		return edges[(int) direction];
+	}
+
+	public void SetEdge (MazeDirection direction, Edge edge) {
+		edges[(int) direction] = edge;
+	}
 }
