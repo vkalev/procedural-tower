@@ -10,6 +10,7 @@ public class Tower : MonoBehaviour
 
     void Start()
     {
+        floors = new List<Floor>();
         for (int i = 0; i < numFloors; i++)
         {
             Floor currFloor = Instantiate(floorPrefab) as Floor;
