@@ -7,11 +7,11 @@ public class MazeGenerator : MonoBehaviour
     MazeCell[,] maze;
     Stack<MazeCell> frontier;
     List<MazeCell> visited;
-    public Tile tilePrefab;
+    public MazeCell cellPrefab;
     public Wall wallPrefab;
     public Passage passagePrefab;
 
-    void Start()
+    void Awake()
     {
         maze = new MazeCell[SizeX, SizeZ];
         frontier = new Stack<MazeCell>();
@@ -19,54 +19,37 @@ public class MazeGenerator : MonoBehaviour
         for (int x = 0; x < SizeX; x++) {
             for (int z = 0; z < SizeZ; z++) {
                 MazeCell newCell = CreateCell(x, z);
-                MazeCell westNeighbor = null, northNeighbor = null;
-                if (x != 0) {
-                    westNeighbor = maze[x-1, z];
-                }
-                if (z != 0) {
-                    northNeighbor = maze[x, z-1];
-                }
+                MazeCell westNeighbor = null, southNeighbor = null;
+                if (x > 0) westNeighbor = maze[x-1, z];
+                if (z > 0) southNeighbor = maze[x, z-1];
                 CreateWall(newCell, westNeighbor, MazeDirection.West);
-                CreateWall(newCell, northNeighbor, MazeDirection.North);
-                if (x == SizeX-1) {
-                    CreateWall(newCell, null, MazeDirection.East);
-                }
-                if (z == SizeZ-1) {
-                    CreateWall(newCell, null, MazeDirection.South);
-                }
-
-                // if (x == SizeX-1) {
-                //     CreateWall(newCell, null, MazeDirection.South);
-                //     CreateWall(newCell, null, MazeDirection.East);
-                // } else {
-                //     if (x == 0 || z == 0) {
-                //         CreateWall(newCell, null, MazeDirection.North);
-                //         CreateWall(newCell, null, MazeDirection.West);
-                //     } else if (z == SizeZ-1) {
-                //         CreateWall(newCell, maze[x, z-1], MazeDirection.North);
-                //         CreateWall(newCell, maze[x-1, z], MazeDirection.West);
-                //         CreateWall(newCell, null, MazeDirection.East);
-                //     } else {
-                //         CreateWall(newCell, maze[x, z-1], MazeDirection.North);
-                //         CreateWall(newCell, maze[x-1, z], MazeDirection.West);
-                //     }
-                // }
+                CreateWall(newCell, southNeighbor, MazeDirection.North);
+                if (x == SizeX-1) CreateWall(newCell, null, MazeDirection.East);
+                if (z == SizeZ-1) CreateWall(newCell, null, MazeDirection.North);
             }
         }
     }
     
     private MazeCell CreateCell(int x, int z)
     {
-        Tile newTile = Instantiate(tilePrefab) as Tile;
-        maze[x, z] = new MazeCell(x, z, newTile);
-        newTile.name = "Floor Tile " + x + ", " + z;
-		newTile.transform.parent = transform;
-		newTile.transform.localPosition = new Vector3(x - SizeX * 0.5f + 0.5f, 0f, z - SizeZ * 0.5f + 0.5f);
-        return maze[x, z];
+        MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
+        maze[x, z] = newCell;
+        newCell.X = x;
+        newCell.Z = z;
+        newCell.name = "Cell " + x + ", " + z;
+		newCell.transform.parent = transform;
+		newCell.transform.localPosition = new Vector3(x - SizeX * 0.5f + 0.5f, 0f, z - SizeZ * 0.5f + 0.5f);
+        return newCell;
     }
 
     void CreatePassage(MazeCell cell, MazeCell neighbor, MazeDirection direction)
     {
+        Edge currCellEdge = cell.GetEdge(direction);
+        Edge currNeighborEdge = neighbor.GetEdge(direction.GetOpposite());
+        if (currCellEdge != null && currNeighborEdge != null) {
+            Destroy(currCellEdge.gameObject);
+            Destroy(currNeighborEdge.gameObject);
+        }
         Passage newPassage = Instantiate(passagePrefab) as Passage;
         newPassage.Initialize(cell, neighbor, direction);
         newPassage = Instantiate(passagePrefab) as Passage;
@@ -85,6 +68,7 @@ public class MazeGenerator : MonoBehaviour
 
     public void GenerateMaze()
     {
+        maze[0, 0].DestroyEdge(MazeDirection.North);
         // RandomizedDFS();
     }
 
@@ -115,14 +99,18 @@ public class MazeGenerator : MonoBehaviour
     List<MazeCell> GetNeighbors(int x, int z)
     {
         List<MazeCell> validNeighbors = new List<MazeCell>();
-        MazeCell northNeighbor = maze[x, z-1];
-        if (northNeighbor.Z >= 0 && !visited.Contains(northNeighbor)) validNeighbors.Add(northNeighbor);
-        MazeCell eastNeighbor = maze[x+1, z];
-        if (eastNeighbor.X < SizeX && !visited.Contains(eastNeighbor)) validNeighbors.Add(eastNeighbor);
-        MazeCell southNeighbor = maze[x, z+1];
-        if (southNeighbor.Z < SizeZ && !visited.Contains(southNeighbor)) validNeighbors.Add(southNeighbor);
-        MazeCell westNeighbor = maze[x-1, z];
-        if (westNeighbor.X >= 0 && !visited.Contains(westNeighbor)) validNeighbors.Add(westNeighbor);
+        MazeCell northNeighbor = null, eastNeighbor = null, southNeighbor = null, westNeighbor = null;
+        
+        if (z > 0) northNeighbor = maze[x, z-1];
+        if (x < SizeX-1) eastNeighbor = maze[x+1, z];
+        if (x > 0) westNeighbor = maze[x-1, z];
+        if (z < SizeZ-1) southNeighbor = maze[x, z+1];
+
+        if (northNeighbor != null && !visited.Contains(northNeighbor)) validNeighbors.Add(northNeighbor);
+        if (eastNeighbor != null && !visited.Contains(eastNeighbor)) validNeighbors.Add(eastNeighbor);
+        if (southNeighbor != null && !visited.Contains(southNeighbor)) validNeighbors.Add(southNeighbor);
+        if (westNeighbor != null && !visited.Contains(westNeighbor)) validNeighbors.Add(westNeighbor);
+
         return validNeighbors;
     }
 }

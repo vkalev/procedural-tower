@@ -28,6 +28,6 @@ public class TowerManager : MonoBehaviour
     {
         tower.DestroyFloors();
         Destroy(tower.gameObject);
-        BuildTower();
+        // BuildTower();
     }
 }
