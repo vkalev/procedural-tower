@@ -14,6 +14,8 @@ public class Tower : MonoBehaviour
         for (int i = 0; i < numFloors; i++)
         {
             Floor currFloor = Instantiate(floorPrefab) as Floor;
+            currFloor.Generate();
+            // StartCoroutine(currFloor.Generate());
             floors.Add(currFloor);
         }
     }

@@ -6,6 +6,7 @@ public class MazeCell : MonoBehaviour
     public int Z { get; set; }
     
     private Edge[] edges = new Edge[MazeDirections.Count];
+    private int initializedEdgeCount;
 
     public override bool Equals(object obj)
     {
@@ -32,11 +33,25 @@ public class MazeCell : MonoBehaviour
 	public void SetEdge (MazeDirection direction, Edge edge) 
     {
 		edges[(int) direction] = edge;
+        initializedEdgeCount++;
 	}
 
-    public void DestroyEdge (MazeDirection direction)
-    {
-        Destroy(edges[(int) direction].gameObject);
-        // edges[(int) direction] = null;
-    }
+	public bool IsFullyInitialized() {
+		return initializedEdgeCount == MazeDirections.Count;
+	}
+
+    public int[] GetRandomNeighborData() {
+		int skips = Random.Range(0, MazeDirections.Count - initializedEdgeCount);
+        int index;
+        for (index = 0; index < MazeDirections.Count; index++) {
+            if (edges[index] == null) {
+                if (skips == 0) {
+                    break;
+                }
+                skips -= 1;
+            }
+        }
+        int[] directionVector = MazeDirections.GetDirectionVector(MazeDirections.Directions[index]);
+        return new int[3] { this.X + directionVector[0], this.Z + directionVector[1], index };
+	}
 }

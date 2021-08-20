@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7963232560307012915}
   - component: {fileID: 5754773997115894807}
-  - component: {fileID: 5051197019154182412}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -44,22 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f1385bea6cb415499dab0412abf2d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 3282966017561113289, guid: a75f67580d69743159e600124bc1a802, type: 3}
+  floorPrefab: {fileID: -2750461783499975154, guid: a75f67580d69743159e600124bc1a802, type: 3}
   numFloors: 1
---- !u!114 &5051197019154182412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7963232560307012917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c15a0b2c8a8184b609f368e236dd25da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SizeX: 40
-  SizeZ: 30
-  cellPrefab: {fileID: 1066349807593442709, guid: 14eca47a2053248228f9db09b073e18b, type: 3}
-  wallPrefab: {fileID: 8055076485271252588, guid: 066af6db5599c46a39a60e4eccb360cf, type: 3}
-  passagePrefab: {fileID: 3568854338324250147, guid: decaa4fe2febb4ce98ee7efa2ed08697, type: 3}

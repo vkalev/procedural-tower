@@ -26,8 +26,9 @@ public class TowerManager : MonoBehaviour
 
     private void RebuildTower()
     {
+        // StopAllCoroutines();
         tower.DestroyFloors();
         Destroy(tower.gameObject);
-        // BuildTower();
+        BuildTower();
     }
 }
