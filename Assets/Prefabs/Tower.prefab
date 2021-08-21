@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorPrefab: {fileID: -2750461783499975154, guid: a75f67580d69743159e600124bc1a802, type: 3}
-  numFloors: 1
+  floorSizeX: 70
+  floorSizeZ: 50
+  numFloors: 20
