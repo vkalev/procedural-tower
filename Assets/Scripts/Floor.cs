@@ -11,12 +11,12 @@ public class Floor : MonoBehaviour
     public MazeCell cellPrefab;
     public Wall wallPrefab;
     public Passage passagePrefab;
-    private float FloorNumber;
+    private float floorHeight;
 
-    public void Generate(float floorNumber, int sizeX, int sizeZ)
+    public void Generate(float floorHeight, int sizeX, int sizeZ)
     {
         // WaitForSeconds delay = new WaitForSeconds(stepDelay);
-        this.FloorNumber = floorNumber;
+        this.floorHeight = floorHeight;
         this.SizeX = sizeX;
         this.SizeZ = sizeZ;
 		maze = new MazeCell[SizeX, SizeZ];
@@ -62,7 +62,7 @@ public class Floor : MonoBehaviour
         newCell.Z = z;
         newCell.name = "Cell " + x + ", " + z;
 		newCell.transform.parent = transform;
-		newCell.transform.localPosition = new Vector3(x - SizeX * 0.5f + 0.5f, FloorNumber, z - SizeZ * 0.5f + 0.5f);
+		newCell.transform.localPosition = new Vector3(x - SizeX * 0.5f + 0.5f, floorHeight, z - SizeZ * 0.5f + 0.5f);
         return newCell;
     }
 
