@@ -23,7 +23,7 @@ public class Tower : MonoBehaviour
         for (int i = 0; i < numFloors; i++)
         {
             Floor currFloor = Instantiate(floorPrefab) as Floor;
-            currFloor.Generate((float) i * 5, floorSizeX, floorSizeZ);
+            currFloor.Generate((float) i + (float) 0.05, floorSizeX, floorSizeZ);
             floorSizeX -= 2;
             floorSizeZ -= 2;
             // StartCoroutine(currFloor.Generate());
@@ -52,7 +52,7 @@ public class Tower : MonoBehaviour
                 for (int topIndex = 0; topIndex < topBorder.Length; topIndex++)
                 {
                     int directionIndexOffset = GetDirectionOffset(direction);
-                    int vertexIndex = topIndex + directionIndexOffset + i * (floorSizeX * 2 + floorSizeZ * 2);
+                    int vertexIndex = topIndex + directionIndexOffset + i * (floors[i].SizeX * 2 + floors[i].SizeZ * 2);
                     // Vector3 topLeftVertex, topRightVertex, bottomLeftVertex, botttomRightVertex;
                     // Vector3 topCellPosition = topBorder[topIndex].transform.position;
                     // topLeftVertex = new Vector3(topCellPosition.x + offsets[0].x, topCellPosition.y, topCellPosition.z + offsets[0].z);
@@ -76,20 +76,21 @@ public class Tower : MonoBehaviour
                         vertices[vertexIndex] = currVertex;
                         Vector3 endCellPosition = currBorder[currIndex+1].transform.position;
                         vertices[vertexIndex+1] = new Vector3(endCellPosition.x + offsets[1].x, endCellPosition.y, endCellPosition.z + offsets[1].z);
-                        topIndex++;
+                        currIndex++;
                     } else {
                         vertices[vertexIndex] = currVertex;
                     }
 
                     if (topIndex != topBorder.Length-1 && i != numFloors-1)
                     {
+                        Debug.Log(triIndex);
                         triangles[triIndex] = vertexIndex;
-                        triangles[triIndex+1] = vertexIndex + (floorSizeX * 2 + floorSizeZ * 2) + 1;
-                        triangles[triIndex+2] = vertexIndex + (floorSizeX * 2 + floorSizeZ * 2);
+                        triangles[triIndex+1] = vertexIndex + (floors[i].SizeX * 2 + floors[i].SizeZ * 2) + 1;
+                        triangles[triIndex+2] = vertexIndex + (floors[i].SizeX * 2 + floors[i].SizeZ * 2);
 
                         triangles[triIndex+3] = vertexIndex;
                         triangles[triIndex+4] = vertexIndex + 1;
-                        triangles[triIndex+5] = vertexIndex + (floorSizeX * 2 + floorSizeZ * 2) + 1;
+                        triangles[triIndex+5] = vertexIndex + (floors[i].SizeX * 2 + floors[i].SizeZ * 2) + 1;
                         triIndex += 6;
                     }
                     currIndex++;
@@ -116,6 +117,7 @@ public class Tower : MonoBehaviour
             floorSizeX += 2;
             floorSizeZ += 2;
         }
+        Debug.Log(triangleCount);
         return new int[2] {vertexCount, triangleCount};
     }
 

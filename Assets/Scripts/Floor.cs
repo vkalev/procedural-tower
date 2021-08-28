@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Floor : MonoBehaviour
 {
-    private int SizeX, SizeZ;
+    public int SizeX, SizeZ;
     // public float stepDelay = 0.000000001f;
     MazeCell[,] maze;
     List<MazeCell> frontier;
