@@ -47,4 +47,5 @@ MonoBehaviour:
   SizeZ: 50
   cellPrefab: {fileID: 1066349807593442709, guid: 14eca47a2053248228f9db09b073e18b, type: 3}
   wallPrefab: {fileID: 8055076485271252588, guid: 066af6db5599c46a39a60e4eccb360cf, type: 3}
+  stairPrefab: {fileID: 7746848996677549874, guid: b8a3bc61e5c474af6a5bb23c6ddc0255, type: 3}
   passagePrefab: {fileID: 3568854338324250147, guid: decaa4fe2febb4ce98ee7efa2ed08697, type: 3}

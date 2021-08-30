@@ -10,8 +10,10 @@ public class Floor : MonoBehaviour
     List<MazeCell> visited;
     public MazeCell cellPrefab;
     public Wall wallPrefab;
+    public Stair stairPrefab;
     public Passage passagePrefab;
     private float floorHeight;
+    private MazeCell currentCell;
 
     public void Generate(float floorHeight, int sizeX, int sizeZ)
     {
@@ -29,12 +31,13 @@ public class Floor : MonoBehaviour
 			// yield return delay;
 			GrowingTreeStep();
 		}
+        CreateStair();
     }
 
-    private void GrowingTreeStep()
+    void GrowingTreeStep()
     {
         int currentIndex = frontier.Count - 1;
-        MazeCell currentCell = frontier[currentIndex];
+        currentCell = frontier[currentIndex];
         if (currentCell.IsFullyInitialized()) {
             frontier.RemoveAt(currentIndex);
             return;
@@ -54,7 +57,7 @@ public class Floor : MonoBehaviour
         }
     }
 
-    private MazeCell CreateCell(int x, int z)
+    MazeCell CreateCell(int x, int z)
     {
         MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
         maze[x, z] = newCell;
@@ -90,7 +93,15 @@ public class Floor : MonoBehaviour
         }
     }
 
-    private bool InBoundary (int x, int z)
+    void CreateStair()
+    {
+        Stair newStair = Instantiate(stairPrefab) as Stair;
+        newStair.name = "Stair " + floorHeight;
+		newStair.transform.parent = transform;
+		newStair.transform.localPosition = new Vector3(currentCell.X - SizeX * 0.5f + 0.5f, floorHeight + (float) 0.05, currentCell.Z - SizeZ * 0.5f + 0.5f);
+    }
+
+    bool InBoundary (int x, int z)
     {
         return x >= 0 && x < SizeX && z >= 0 && z < SizeZ;
     }
