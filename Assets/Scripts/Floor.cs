@@ -8,7 +8,7 @@ public class Floor : MonoBehaviour
     MazeCell[,] maze;
     List<MazeCell> frontier;
     List<MazeCell> visited;
-    public MazeCell cellPrefab;
+    public FloorTile floorTilePrefab;
     public Wall wallPrefab;
     public Stair stairPrefab;
     public Passage passagePrefab;
@@ -59,7 +59,7 @@ public class Floor : MonoBehaviour
 
     MazeCell CreateCell(int x, int z)
     {
-        MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
+        MazeCell newCell = Instantiate(floorTilePrefab) as FloorTile;
         maze[x, z] = newCell;
         newCell.X = x;
         newCell.Z = z;

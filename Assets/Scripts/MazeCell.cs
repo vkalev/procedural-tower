@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MazeCell : MonoBehaviour
+public abstract class MazeCell : MonoBehaviour
 {
     public int X { get; set; }
     public int Z { get; set; }

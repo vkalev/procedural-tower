@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &470570549028942769
+--- !u!1 &8511761607588603195
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2460742465391102823}
-  - component: {fileID: -2750461783499975154}
+  - component: {fileID: 6341067721076346339}
+  - component: {fileID: 1161883201891712633}
   m_Layer: 0
-  m_Name: Floor
+  m_Name: Empty Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2460742465391102823
+--- !u!4 &6341067721076346339
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 470570549028942769}
+  m_GameObject: {fileID: 8511761607588603195}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,21 +31,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2750461783499975154
+--- !u!114 &1161883201891712633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 470570549028942769}
+  m_GameObject: {fileID: 8511761607588603195}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb3b434b259784b8aa79cfa4d3e0b5bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f65e9a451ec345bc96a46c2583fab1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SizeX: 70
-  SizeZ: 50
-  floorTilePrefab: {fileID: 9192699719334323241, guid: 1470903e7a124436b989c8f8b0f6baaf, type: 3}
-  wallPrefab: {fileID: 8055076485271252588, guid: 066af6db5599c46a39a60e4eccb360cf, type: 3}
-  stairPrefab: {fileID: 7746848996677549874, guid: b8a3bc61e5c474af6a5bb23c6ddc0255, type: 3}
-  passagePrefab: {fileID: 3568854338324250147, guid: decaa4fe2febb4ce98ee7efa2ed08697, type: 3}
