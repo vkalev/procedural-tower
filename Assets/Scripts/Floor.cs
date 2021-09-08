@@ -41,8 +41,10 @@ public class Floor : MonoBehaviour
         MazeCell initial = CreateCell(randomX, randomZ);
         frontier.Add(initial);
 		while (frontier.Count > 0) {
+            // visualization for maze generation
 			// yield return delay;
 			GrowingTreeStep();
+            // only creating stairs at end positions in a maze that exist within the floor above
             if (currentCell.X < SizeX-2 && currentCell.Z < SizeZ-2) stairCell = currentCell;
 		}
         CreateStair();
@@ -56,6 +58,7 @@ public class Floor : MonoBehaviour
             frontier.RemoveAt(currentIndex);
             return;
         }
+        // randomization of neighbor selection --> Prim Jarnik's
         int[] neighborData = currentCell.GetRandomNeighborData();
         if (InBoundary(neighborData[0], neighborData[1])) {
             MazeCell neighbor = maze[neighborData[0], neighborData[1]];
@@ -67,6 +70,7 @@ public class Floor : MonoBehaviour
                 CreateWall(currentCell, neighbor, MazeDirections.Directions[neighborData[2]]);
             }
         } else {
+            // prevents walls from being generated at the exterior of each floor 
             CreatePassage(currentCell, null, MazeDirections.Directions[neighborData[2]]);
         }
     }

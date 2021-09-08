@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    MeshFilter meshFilter;
     public Floor floorPrefab;
     private List<Floor> floors;
     public int floorSizeX = 70, floorSizeZ = 50;
