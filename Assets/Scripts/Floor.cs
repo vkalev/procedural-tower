@@ -1,28 +1,41 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Floor : MonoBehaviour
 {
     public int SizeX, SizeZ;
-    // public float stepDelay = 0.000000001f;
+    public float stepDelay = 0.000000001f;
     MazeCell[,] maze;
     List<MazeCell> frontier;
     List<MazeCell> visited;
     public FloorTile floorTilePrefab;
+    public EmptyTile emptyTilePrefab;
     public Wall wallPrefab;
     public Stair stairPrefab;
     public Passage passagePrefab;
     private float floorHeight;
     private MazeCell currentCell;
+    private MazeCell stairCell;
+    private int emptyCellX;
+    private int emptyCellZ;
 
-    public void Generate(float floorHeight, int sizeX, int sizeZ)
+    public MazeCell Generate(float floorHeight, int sizeX, int sizeZ, int stairX, int stairY)
     {
-        // WaitForSeconds delay = new WaitForSeconds(stepDelay);
+        WaitForSeconds delay = new WaitForSeconds(stepDelay);
         this.floorHeight = floorHeight;
         this.SizeX = sizeX;
         this.SizeZ = sizeZ;
+        this.emptyCellX = stairX;
+        this.emptyCellZ = stairY;
 		maze = new MazeCell[SizeX, SizeZ];
 		frontier = new List<MazeCell>();
+        RandomizedGrowingTree(delay);
+        return stairCell;
+    }
+
+    void RandomizedGrowingTree(WaitForSeconds delay)
+    {
         int randomX = Random.Range(0, SizeX);
         int randomZ = Random.Range(0, SizeZ);
         MazeCell initial = CreateCell(randomX, randomZ);
@@ -30,6 +43,7 @@ public class Floor : MonoBehaviour
 		while (frontier.Count > 0) {
 			// yield return delay;
 			GrowingTreeStep();
+            if (currentCell.X < SizeX-2 && currentCell.Z < SizeZ-2) stairCell = currentCell;
 		}
         CreateStair();
     }
@@ -47,8 +61,8 @@ public class Floor : MonoBehaviour
             MazeCell neighbor = maze[neighborData[0], neighborData[1]];
             if (neighbor == null) {
                 neighbor = CreateCell(neighborData[0], neighborData[1]);
-				CreatePassage(currentCell, neighbor, MazeDirections.Directions[neighborData[2]]);
-				frontier.Add(neighbor);
+                CreatePassage(currentCell, neighbor, MazeDirections.Directions[neighborData[2]]);
+                frontier.Add(neighbor);
             } else {
                 CreateWall(currentCell, neighbor, MazeDirections.Directions[neighborData[2]]);
             }
@@ -59,7 +73,12 @@ public class Floor : MonoBehaviour
 
     MazeCell CreateCell(int x, int z)
     {
-        MazeCell newCell = Instantiate(floorTilePrefab) as FloorTile;
+        MazeCell newCell;
+        if (x == emptyCellX && z == emptyCellZ) {
+            newCell = Instantiate(emptyTilePrefab) as EmptyTile;
+        } else {
+            newCell = Instantiate(floorTilePrefab) as FloorTile;
+        }
         maze[x, z] = newCell;
         newCell.X = x;
         newCell.Z = z;

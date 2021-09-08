@@ -46,6 +46,7 @@ MonoBehaviour:
   SizeX: 70
   SizeZ: 50
   floorTilePrefab: {fileID: 9192699719334323241, guid: 1470903e7a124436b989c8f8b0f6baaf, type: 3}
+  emptyTilePrefab: {fileID: 1161883201891712633, guid: bc0aa18a269164e5f94bfabb0dcea02d, type: 3}
   wallPrefab: {fileID: 8055076485271252588, guid: 066af6db5599c46a39a60e4eccb360cf, type: 3}
   stairPrefab: {fileID: 7746848996677549874, guid: b8a3bc61e5c474af6a5bb23c6ddc0255, type: 3}
   passagePrefab: {fileID: 3568854338324250147, guid: decaa4fe2febb4ce98ee7efa2ed08697, type: 3}
